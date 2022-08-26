@@ -8,7 +8,7 @@ interface AuthProviderProps {
 export interface AuthValue {
   user: IAuth | null;
   signIn: (newUser: IAuth | null, cb: () => void) => void;
-  signOut: () => void;
+  signOut: (cb: () => void) => void;
 }
 
 export const AuthContext = createContext<AuthValue>({
@@ -24,8 +24,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     setUser(newUser);
     cb();
   };
-  const signOut = () => {
+  const signOut = (cb: () => void) => {
     setUser(null);
+    cb();
   };
 
   const value: AuthValue = useMemo(() => ({ user, signIn, signOut }), [user]);
