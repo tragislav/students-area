@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { useAuth } from '../../hooks/useAuth';
+import { IAuth } from '../../@types/auth';
 import schema from './validation';
 import { getToken } from '../../api/auth';
 import {
@@ -25,11 +27,24 @@ type Inputs = {
 };
 
 function Login() {
+  const navigate = useNavigate();
+  const { signIn } = useAuth();
   const [disable, setDisable] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
   const { register, handleSubmit, reset } = useForm<Inputs>({
     resolver: yupResolver(schema),
+  });
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      const parseUser: IAuth = JSON.parse(localStorage.getItem('user') || '');
+      signIn(parseUser, () =>
+        navigate('/main', {
+          replace: true,
+        }),
+      );
+    }
   });
 
   const getFormData = (object: Record<string, string>) => {
@@ -46,10 +61,14 @@ function Login() {
       .then((data) => {
         localStorage.setItem('user', JSON.stringify(data));
         reset();
-        console.log('user');
+        signIn(data, () =>
+          navigate(`/main`, {
+            replace: true,
+          }),
+        );
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         setError(true);
         setDisable(false);
         setTimeout(() => setError(false), 5000);
