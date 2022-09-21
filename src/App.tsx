@@ -21,10 +21,26 @@ function App() {
               }
             />
             <Route
-              path="add"
+              path="schedule"
               element={
                 <RequireAuth>
-                  <div>add</div>
+                  <div>Schedule</div>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="statistic"
+              element={
+                <RequireAuth>
+                  <div>Statistic</div>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="attendance"
+              element={
+                <RequireAuth>
+                  <div>Attendance</div>
                 </RequireAuth>
               }
             />

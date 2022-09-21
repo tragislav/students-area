@@ -99,7 +99,7 @@ function Login() {
 
   return (
     <>
-      <LoginHeader />
+      {/* <LoginHeader /> */}
       <LoginContainer>
         <FormWrapper>
           <FormTitle>Вход в личный кабинет</FormTitle>

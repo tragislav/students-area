@@ -1,10 +1,26 @@
 import { Outlet } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import LoginHeader from '../LoginHeader';
+import MainHeader from '../MainHeader';
+import Menu from '../Menu';
+import MainLayoutContent from './styled';
 
 function Layout() {
-  return (
-    <div>
+  const { user } = useAuth();
+
+  return user ? (
+    <>
+      <MainHeader />
+      <MainLayoutContent>
+        <Menu />
+        <Outlet />
+      </MainLayoutContent>
+    </>
+  ) : (
+    <>
+      <LoginHeader />
       <Outlet />
-    </div>
+    </>
   );
 }
 
