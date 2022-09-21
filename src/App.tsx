@@ -3,6 +3,7 @@ import AuthProvider from './components/HOCs/AuthProvider';
 import RequireAuth from './components/HOCs/RequireAuth';
 import Layout from './components/Layout';
 import Login from './pages/Login';
+import MainPage from './pages/MainPage';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
               path="main"
               element={
                 <RequireAuth>
-                  <div>main</div>
+                  <MainPage />
                 </RequireAuth>
               }
             />
