@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -8,6 +9,9 @@ import { useAuth } from '../../hooks/useAuth';
 import { IAuth } from '../../@types/auth';
 import schema from './validation';
 import { getToken } from '../../api/auth';
+
+import LoginHeader from '../../components/LoginHeader';
+
 import {
   FormBottom,
   FormBottomP,
@@ -27,8 +31,9 @@ type Inputs = {
 };
 
 function Login() {
+  const location = useLocation();
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { user, signIn } = useAuth();
   const [disable, setDisable] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
@@ -37,12 +42,26 @@ function Login() {
   });
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
-      const parseUser: IAuth = JSON.parse(localStorage.getItem('user') || '');
-      signIn(parseUser, () =>
-        navigate('/main', {
+    if (!user) {
+      if (localStorage.getItem('user')) {
+        const parseUser: IAuth = JSON.parse(localStorage.getItem('user') || '');
+        signIn(parseUser, () =>
+          navigate(
+            // location.state ? location.state?.from :
+            '/main',
+            {
+              replace: true,
+            },
+          ),
+        );
+      }
+    } else {
+      navigate(
+        // location.state ? location.state?.from :
+        '/main',
+        {
           replace: true,
-        }),
+        },
       );
     }
   });
@@ -79,44 +98,43 @@ function Login() {
   const password = register('password');
 
   return (
-    <LoginContainer>
-      <FormWrapper>
-        <FormTitle>Вход в личный кабинет</FormTitle>
-        {error ? (
-          <FormError>Ошибка авторизации, попробуйте ещё раз</FormError>
-        ) : null}
-        <LoginForm onSubmit={handleSubmit(onSubmit)}>
-          <LoginFormInput>Имя пользователя:</LoginFormInput>
-          <FormInput
-            ref={username.ref}
-            name={username.name}
-            onBlur={username.onBlur}
-            onChange={username.onChange}
-            type="email"
-            id="email"
-            placeholder="Введите имя пользователя"
-            required
-          />
-          <LoginFormInput>Пароль:</LoginFormInput>
-          <FormInput
-            ref={password.ref}
-            name={password.name}
-            onBlur={password.onBlur}
-            onChange={password.onChange}
-            type="password"
-            placeholder="Введите пароль"
-            required
-          />
-          <LoginFormSubmit type="submit" disabled={disable}>
-            Войти
-          </LoginFormSubmit>
-        </LoginForm>
-        <FormBottom>
-          <FormBottomP>Регистрация</FormBottomP>
-          <FormBottomP>Забыли пароль?</FormBottomP>
-        </FormBottom>
-      </FormWrapper>
-    </LoginContainer>
+    <>
+      <LoginHeader />
+      <LoginContainer>
+        <FormWrapper>
+          <FormTitle>Вход в личный кабинет</FormTitle>
+          {error ? (
+            <FormError>Ошибка авторизации, попробуйте ещё раз</FormError>
+          ) : null}
+          <LoginForm onSubmit={handleSubmit(onSubmit)}>
+            <LoginFormInput>Имя пользователя:</LoginFormInput>
+            <FormInput
+              ref={username.ref}
+              name={username.name}
+              onBlur={username.onBlur}
+              onChange={username.onChange}
+              type="email"
+              id="email"
+              placeholder="Введите имя пользователя"
+              required
+            />
+            <LoginFormInput>Пароль:</LoginFormInput>
+            <FormInput
+              ref={password.ref}
+              name={password.name}
+              onBlur={password.onBlur}
+              onChange={password.onChange}
+              type="password"
+              placeholder="Введите пароль"
+              required
+            />
+            <LoginFormSubmit type="submit" disabled={disable}>
+              Войти
+            </LoginFormSubmit>
+          </LoginForm>
+        </FormWrapper>
+      </LoginContainer>
+    </>
   );
 }
 

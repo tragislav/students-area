@@ -11,7 +11,6 @@ export const LoginContainer = styled.div`
 
 export const FormWrapper = styled.div`
   width: 465px;
-  height: 507px;
   text-align: center;
   margin: 180px auto 0;
   border: 1px solid #ebebeb;
@@ -39,7 +38,7 @@ export const FormError = styled.p`
 
 export const LoginForm = styled.form`
   text-align: left;
-  padding: 50px 50px 35px;
+  padding: 50px 50px 55px;
 `;
 
 export const LoginFormInput = styled.p`

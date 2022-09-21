@@ -14,7 +14,7 @@ import {
   ContentUserFIO,
 } from './styled';
 
-function Header() {
+function LoginHeader() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
 
@@ -47,4 +47,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default LoginHeader;
